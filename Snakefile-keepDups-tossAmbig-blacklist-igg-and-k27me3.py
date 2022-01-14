@@ -16,6 +16,10 @@ chromSize_Path  = config['genome'][REFGENOME]['chrSize']
 genomeSize = config['genome'][REFGENOME]['genomeSize']
 readLen = config['readLen']
 
+blacklistPath = 'igg-overlap-keepDups.bed'
+blacklist2Path = 'hwt-k27me3-overlap.bed'
+blacklist2Path = 'k9r-k27me3-overlap.bed'
+
 modules = config['module']
 #########
 # Validation 
@@ -57,15 +61,15 @@ poolSampleSheet = sampleSheet.copy()
 
 sampleSheet['fastq_trim_r1'] = expand("Fastq/{sample}_R{num}_trim.fastq.gz", sample = sampleSheet.baseName, num = ['1'])
 sampleSheet['fastq_trim_r2'] = expand("Fastq/{sample}_R{num}_trim.fastq.gz", sample = sampleSheet.baseName, num = ['2'])
-sampleSheet['bam']           = expand("Bam/{sample}_{species}_trim_q5_dupsRemoved.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, ftype = {"bam"})
+sampleSheet['bam']           = expand("Bam/{sample}_{species}_trim_q30_dupsKept.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, ftype = {"bam"})
 
 for frag, norm in zip(fragTypes, normTypeList):
 	# Add column per peak call list
 	peak_colName = 'peak_{frag}'.format(frag = frag)
-	sampleSheet[peak_colName] = expand("Peaks/{sample}_{species}_trim_q5_dupsRemoved_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = frag)
+	sampleSheet[peak_colName] = expand("Peaks/{sample}_{species}_trim_q30_dupsKept_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = frag)
 	
 	bed_colName = 'bed_{frag}'.format(frag = frag)
-	sampleSheet[bed_colName] = expand('Bed/{sample}_{species}_trim_q5_dupsRemoved_{fragType}.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = frag)
+	sampleSheet[bed_colName] = expand('Bed/{sample}_{species}_trim_q30_dupsKept_{fragType}.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = frag)
 	
 
 # Add columns for all combinations of fragType & normType
@@ -82,15 +86,15 @@ for fragNorm in fragNormCombn:
 
 	# Add column per bigwig
 	bw_colName = 'bigwig_{fragNorm}'.format(fragNorm = fragNorm.replace("-", "_"))
-	sampleSheet[bw_colName] = expand("BigWig/{sample}_{species}_trim_q5_dupsRemoved_{fragNorm}.bw", sample = sampleSheet.baseName, species = REFGENOME, fragNorm = fragNorm) 
+	sampleSheet[bw_colName] = expand("BigWig/{sample}_{species}_trim_q30_dupsKept_{fragNorm}.bw", sample = sampleSheet.baseName, species = REFGENOME, fragNorm = fragNorm) 
 
 	# Add column per zNorm bigwig
 	bw_colName = 'zNorm_bigwig_{fragNorm}'.format(fragNorm = fragNorm.replace("-", "_"))
-	sampleSheet[bw_colName] = expand("BigWig/{sample}_{species}_trim_q5_dupsRemoved_{fragNorm}_zNorm.bw", sample = sampleSheet.baseName, species = REFGENOME, fragNorm = fragNorm) 
+	sampleSheet[bw_colName] = expand("BigWig/{sample}_{species}_trim_q30_dupsKept_{fragNorm}_zNorm.bw", sample = sampleSheet.baseName, species = REFGENOME, fragNorm = fragNorm) 
 
 	# Threshold peakcalls:
 	thresh_colName = 'threshold_peaks_{fragNorm}'.format(fragNorm = fragNorm.replace("-", "_"))
-	sampleSheet[thresh_colName] = expand('Threshold_PeakCalls/{sample}_{species}_trim_q5_dupsRemoved_{fragNorm}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragNorm = fragNorm)
+	sampleSheet[thresh_colName] = expand('Threshold_PeakCalls/{sample}_{species}_trim_q30_dupsKept_{fragNorm}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragNorm = fragNorm)
 
 sampleSheet.to_csv('sampleSheet.tsv', sep = "\t", index = False)
 
@@ -106,21 +110,21 @@ rule all:
 	input:
 		expand("Fastq/{sample}_R{num}_trim.fastq.gz", sample = sampleSheet.baseName, num = ['1','2']),
 		expand("Sam/{sample}_{species}_trim.sam", sample = sampleSheet.baseName, species = combinedGenome),
-		expand("Bam/{sample}_{species}_trim_q5_dupsRemoved.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = {"bam", "bam.bai"}),
-		expand("Logs/{sample}_{species}_trim_q5_dupsRemoved_genomeStats.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-		expand("BigWig/{sample}_{species}_trim_q5_dupsRemoved_{fragType}{normType}.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList, ftype = {"bw", "bg"}),
-		expand("Peaks/{sample}_{species}_trim_q5_dupsRemoved_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes),
-		expand('Threshold_PeakCalls/{sample}_{species}_trim_q5_dupsRemoved_{fragType}{normType}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList),
+		expand("Bam/{sample}_{species}_trim_q30_dupsKept.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = {"bam", "bam.bai"}),
+		expand("Logs/{sample}_{species}_trim_q30_dupsKept_genomeStats.tsv", sample = sampleSheet.baseName, species = combinedGenome),
+		expand("BigWig/{sample}_{species}_trim_q30_dupsKept_{fragType}{normType}.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList, ftype = {"bw", "bg"}),
+		expand("Peaks/{sample}_{species}_trim_q30_dupsKept_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes),
+		expand('Threshold_PeakCalls/{sample}_{species}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList),
 		expand('FastQC/{sample}_R1_fastqc.html', sample = sampleSheet.baseName),
 		expand('FastQC/{sample}_R1_trim_fastqc.html', sample = sampleSheet.baseName),
 		expand('FQscreen/{sample}_R1_trim_screen.txt', sample = sampleSheet.baseName),
 		expand('FQscreen/{sample}_R1_trim_screen.html', sample = sampleSheet.baseName),
 		"multiqc_report.html",
-		expand('Plots/FragDistInPeaks/{sample}_{REFGENOME}_trim_q5_allFrags_fragDistPlot.png', sample = sampleSheet.baseName, REFGENOME = REFGENOME),
-		expand('BigWig/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}_rpgcNorm_zNorm.bw', sample = sampleSheet.baseName, REFGENOME = REFGENOME, fragType = fragTypes),
+		expand('Plots/FragDistInPeaks/{sample}_{REFGENOME}_trim_q30_allFrags_fragDistPlot.png', sample = sampleSheet.baseName, REFGENOME = REFGENOME),
+		expand('BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}_rpgcNorm_zNorm.bw', sample = sampleSheet.baseName, REFGENOME = REFGENOME, fragType = fragTypes),
 		expand("AlignmentStats/{sample}_{species}_trim.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-		expand("AlignmentStats/{sample}_{species}_trim_q5.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-		expand("AlignmentStats/{sample}_{species}_trim_q5_dupsRemoved.tsv", sample = sampleSheet.baseName, species = combinedGenome)
+		expand("AlignmentStats/{sample}_{species}_trim_q30.tsv", sample = sampleSheet.baseName, species = combinedGenome),
+		expand("AlignmentStats/{sample}_{species}_trim_q30_dupsKept.tsv", sample = sampleSheet.baseName, species = combinedGenome)
 
 
 rule combine_technical_reps:
@@ -260,51 +264,23 @@ rule qFilter:
 	input:
 		'Bam/{sample}_' + combinedGenome + '_trim.bam'
 	output:
-		'Bam/{sample}_' + combinedGenome + '_trim_q5.bam'
+		bam = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam',
+		index = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam'
 	envmodules:
 		modules['samtoolsVer']
 	shell:
 		"""
-		samtools view -@ 4 -bq 5 {input} > {output}
-		"""
-
-rule markDups:
-	input:
-		'Bam/{sample}_{species}_trim_q5.bam'
-	output:
-		sorted = 'Bam/{sample}_{species}_trim_q5_sorted.bam',
-		markedDups = 'Bam/{sample}_{species}_trim_q5_dupsMarked.bam',
-		PCRdups = "PCRdups/{sample}_{species}_trim_PCR_duplicates"
-	params:
-		picardPath = modules['picardPath']
-	envmodules:
-		modules['picardVer']
-	shell:
-		"""
-		java -Xmx8g -jar {params.picardPath} SortSam INPUT= {input} OUTPUT= {output.sorted} SORT_ORDER=coordinate &&
-		java -Xmx8g -jar {params.picardPath} MarkDuplicates INPUT= {output.sorted} OUTPUT= {output.markedDups} METRICS_FILE= {output.PCRdups} REMOVE_DUPLICATES= false ASSUME_SORTED= true
-		"""
-# TODO: remove dups in markDups rule
-rule removeDups:
-	input:
-		'Bam/{sample}_' + combinedGenome + '_trim_q5_dupsMarked.bam'
-	output:
-		bam = 'Bam/{sample}_' +  combinedGenome + '_trim_q5_dupsRemoved.bam',
-		index = 'Bam/{sample}_' + combinedGenome + '_trim_q5_dupsRemoved.bam.bai'
-	envmodules:
-		modules['samtoolsVer']
-	shell:
-		"""
-		samtools view -@ 4 -bF 0x400 {input} > {output.bam} &&
+		samtools view -@ 4 -bq 30 {input} > {output} &&
 		samtools index {output.bam} {output.index}
 		"""
 
+
 rule collect_genome_align_stats:
 	input:
-		bam = 'Bam/{sample}_' +  combinedGenome + '_trim_q5_dupsRemoved.bam',
-		index = 'Bam/{sample}_' + combinedGenome + '_trim_q5_dupsRemoved.bam.bai'
+		bam = 'Bam/{sample}_' +  combinedGenome + '_trim_q30_dupsKept.bam',
+		index = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam.bai'
 	output:
-		stats = 'Logs/{sample}_' + combinedGenome + '_trim_q5_dupsRemoved_genomeStats.tsv'
+		stats = 'Logs/{sample}_' + combinedGenome + '_trim_q30_dupsKept_genomeStats.tsv'
 	params:
 		mlr = modules['mlrPath']
 	envmodules:
@@ -328,11 +304,11 @@ rule collect_genome_align_stats:
 
 rule splitSpecies:
     	input:
-	    	bam = 'Bam/{sample}_' + combinedGenome + '_trim_q5_dupsRemoved.bam',
-	    	index = 'Bam/{sample}_' + combinedGenome + '_trim_q5_dupsRemoved.bam.bai',
+	    	bam = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam',
+	    	index = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam.bai',
 	output:
-		bam = expand('Bam/{{sample}}_{species}_trim_q5_dupsRemoved.bam', species = speciesList),
-		index = expand('Bam/{{sample}}_{species}_trim_q5_dupsRemoved.bam.bai', species = speciesList)
+		bam = expand('Bam/{{sample}}_{species}_trim_q30_dupsKept.bam', species = speciesList),
+		index = expand('Bam/{{sample}}_{species}_trim_q30_dupsKept.bam.bai', species = speciesList)
 	params:
 		#prefix = lambda wildcards : ["{}_".format(wildcards.species)]
 		prefix = ["{}_".format(species) for species in speciesList],
@@ -350,10 +326,10 @@ rule splitSpecies:
 
 rule sortBam:
 	input:
-		'Bam/{sample}_' + REFGENOME + '_trim_q5_dupsRemoved.bam'
+		'Bam/{sample}_' + REFGENOME + '_trim_q30_dupsKept.bam'
 	output:
-		bam = 'Bam/{sample}_' + REFGENOME + '_trim_q5_dupsRemoved_sorted.bam',
-		idx = 'Bam/{sample}_' + REFGENOME + '_trim_q5_dupsRemoved_sorted.bam.bai'
+		bam = 'Bam/{sample}_' + REFGENOME + '_trim_q30_dupsKept_sorted.bam',
+		idx = 'Bam/{sample}_' + REFGENOME + '_trim_q30_dupsKept_sorted.bam.bai'
 	envmodules:
 		modules['samtoolsVer']
 	threads: 4
@@ -365,9 +341,9 @@ rule sortBam:
 
 rule nameSortBam:
 	input:
-		'Bam/{sample}_{species}_trim_q5_dupsRemoved_sorted.bam'
+		'Bam/{sample}_{species}_trim_q30_dupsKept_sorted.bam'
 	output:
-		'Bam/{sample}_{species}_trim_q5_dupsRemoved_nameSorted.bam'
+		'Bam/{sample}_{species}_trim_q30_dupsKept_nameSorted.bam'
 	envmodules:
 		modules['samtoolsVer']
 	shell:
@@ -377,23 +353,25 @@ rule nameSortBam:
 
 rule convertBamToBed:
 	input:
-		bam = 'Bam/{sample}_{species}_trim_q5_dupsRemoved_nameSorted.bam',
+		bam = 'Bam/{sample}_{species}_trim_q30_dupsKept_nameSorted.bam',
+		blacklist1 = blacklistPath,
+		blacklist2 = blacklist2Path
 	output:
-		'Bed/{sample}_{species}_trim_q5_dupsRemoved.bed'
+		'Bed/{sample}_{species}_trim_q30_dupsKept.bed'
 	envmodules:
 		modules['bedtoolsVer']
 	shell:
 		"""
-		bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n > {output}
+		bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n | bedtools intersect -a stdin -b {input.blacklist1} -v | bedtools intersect -a stdin -b {input.blacklist2} -v > {output}
 		"""
 
 rule splitFragments:
 	input:
-		'Bed/{sample}_{REFGENOME}_trim_q5_dupsRemoved.bed'
+		'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept.bed'
 	output:
-		allFrags = 'Bed/{sample}_{REFGENOME}_trim_q5_dupsRemoved_allFrags.bed',
-		smallFrags = 'Bed/{sample}_{REFGENOME}_trim_q5_dupsRemoved_20to120.bed',
-		bigFrags = 'Bed/{sample}_{REFGENOME}_trim_q5_dupsRemoved_150to700.bed'
+		allFrags = 'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept_allFrags.bed',
+		smallFrags = 'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept_20to120.bed',
+		bigFrags = 'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept_150to700.bed'
 	shell:
 		"""
 		cut -f 1,2,6,7 {input} | awk -F '\t' '{{print $0, ($3-$2)}}' - > {output.allFrags}
@@ -404,10 +382,10 @@ rule splitFragments:
 # TODO: get readLen from sampleInfo (reference column like sampleSheet.readLen[sampleSheet.sample == wildcards.sample])
 rule makeFragmentBedGraphs:
 	input:
-		ref   = lambda wildcards : 'Bed/' + wildcards.sample + '_' + REFGENOME + '_trim_q5_dupsRemoved_' + wildcards.fragType + '.bed'
+		ref   = lambda wildcards : 'Bed/' + wildcards.sample + '_' + REFGENOME + '_trim_q30_dupsKept_' + wildcards.fragType + '.bed'
 	output:
-		unNorm    = 'BigWig/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}.bg',
-		rpgcNorm  = 'BigWig/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}_rpgcNorm.bg'
+		unNorm    = 'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}.bg',
+		rpgcNorm  = 'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}_rpgcNorm.bg'
 	params:
 		genomeSize = genomeSize,
 		chromSize_Path = chromSize_Path,
@@ -426,11 +404,11 @@ rule makeFragmentBedGraphs:
 
 rule makeSpikeNormFragmentBedGraphs:
 	input:
-		ref   = lambda wildcards : 'Bed/' + wildcards.sample + '_' + REFGENOME + '_trim_q5_dupsRemoved_' + wildcards.fragType + '.bed',
-		#spike = lambda wildcards : 'Bam/' + wildcards.sample + '_' + SPIKEGENOME + '_trim_q5_dupsRemoved.bam'
-		spike = 'Bam/{sample}_{spikeGenome}_trim_q5_dupsRemoved.bam'
+		ref   = lambda wildcards : 'Bed/' + wildcards.sample + '_' + REFGENOME + '_trim_q30_dupsKept_' + wildcards.fragType + '.bed',
+		#spike = lambda wildcards : 'Bam/' + wildcards.sample + '_' + SPIKEGENOME + '_trim_q30_dupsKept.bam'
+		spike = 'Bam/{sample}_{spikeGenome}_trim_q30_dupsKept.bam'
 	output:
-		spikeNorm = 'BigWig/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}_{spikeGenome}-spikeNorm.bg'
+		spikeNorm = 'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}_{spikeGenome}-spikeNorm.bg'
 	params:
 		genomeSize = genomeSize,
 		chromSize_Path = chromSize_Path
@@ -447,9 +425,9 @@ rule makeSpikeNormFragmentBedGraphs:
 
 rule convertToBigWig:
 	input:
-		'BigWig/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}{normType}.bg'
+		'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}.bg'
 	output:
-		'BigWig/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}{normType}.bw'
+		'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}.bw'
 	params:
 		chromSize_Path = chromSize_Path
 	envmodules:
@@ -461,10 +439,10 @@ rule convertToBigWig:
 
 rule zNormBigWig:
 	input:
-		'BigWig/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}_rpgcNorm.bw'
+		'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}_rpgcNorm.bw'
 	output:
-		zNorm = 'BigWig/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}_rpgcNorm_zNorm.bw',
-		zStats = 'Logs/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}.zNorm'
+		zNorm = 'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}_rpgcNorm_zNorm.bw',
+		zStats = 'Logs/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}.zNorm'
 	envmodules:
 		modules['rVer']
 	shell:
@@ -474,9 +452,9 @@ rule zNormBigWig:
 
 rule callThresholdPeaks:
 	input:
-		'BigWig/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}{normType}.bw'
+		'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}.bw'
 	output:
-		'Threshold_PeakCalls/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}{normType}_thresholdPeaks.bed'
+		'Threshold_PeakCalls/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed'
 	envmodules:
 		modules['rVer']
 	shell:
@@ -486,12 +464,12 @@ rule callThresholdPeaks:
 	
 rule callPeaks:
 	input:
-		'Bed/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}.bed'
+		'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}.bed'
 	output:
-		'Peaks/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}_peaks.narrowPeak'
+		'Peaks/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}_peaks.narrowPeak'
 	params:
 		control = controlDNAPath,
-		prefix = 'Peaks/{sample}_{REFGENOME}_trim_q5_dupsRemoved_{fragType}'
+		prefix = 'Peaks/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}'
 	envmodules:
 		modules['macsVer']
 	shell:
@@ -501,12 +479,12 @@ rule callPeaks:
 
 rule qcReport:
 	input:
-		expand("Bam/{sample}_{species}_trim_q5_dupsRemoved.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = ['bam', 'bam.bai']),
+		expand("Bam/{sample}_{species}_trim_q30_dupsKept.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = ['bam', 'bam.bai']),
 		expand('FQscreen/{sample}_R1_trim_screen.txt', sample = sampleSheet.baseName),
 		expand('FastQC/{sample}_R1_trim_fastqc.html', sample = sampleSheet.baseName),
 		expand("AlignmentStats/{sample}_{species}_trim.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-		expand("AlignmentStats/{sample}_{species}_trim_q5.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-		expand("AlignmentStats/{sample}_{species}_trim_q5_dupsRemoved.tsv", sample = sampleSheet.baseName, species = combinedGenome)
+		expand("AlignmentStats/{sample}_{species}_trim_q30.tsv", sample = sampleSheet.baseName, species = combinedGenome),
+		expand("AlignmentStats/{sample}_{species}_trim_q30_dupsKept.tsv", sample = sampleSheet.baseName, species = combinedGenome)
 	output:
 		"multiqc_report.html"
 	envmodules: modules['multiqcVer']
@@ -517,10 +495,10 @@ rule qcReport:
 
 rule makeFragmentSizePlots_inPeaks:
 	input:
-		bed = 'Bed/{sample}_{REFGENOME}_trim_q5_dupsRemoved_allFrags.bed',
-		peaks = 'Peaks/{sample}_{REFGENOME}_trim_q5_dupsRemoved_allFrags_peaks.narrowPeak'
+		bed = 'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept_allFrags.bed',
+		peaks = 'Peaks/{sample}_{REFGENOME}_trim_q30_dupsKept_allFrags_peaks.narrowPeak'
 	output:
-		'Plots/FragDistInPeaks/{sample}_{REFGENOME}_trim_q5_allFrags_fragDistPlot.png'
+		'Plots/FragDistInPeaks/{sample}_{REFGENOME}_trim_q30_allFrags_fragDistPlot.png'
 	envmodules:
 		modules['rVer']
 	shell:
@@ -531,28 +509,28 @@ rule makeFragmentSizePlots_inPeaks:
 rule alignmentStats:
     	input:
 	    	trim = "Bam/{sample}_" + combinedGenome + "_trim.bam",
-		trim_q5 = "Bam/{sample}_" + combinedGenome + "_trim_q5.bam",
-		q5_dupsRemoved = "Bam/{sample}_" + combinedGenome + "_trim_q5_dupsRemoved.bam"
+		trim_q30 = "Bam/{sample}_" + combinedGenome + "_trim_q30.bam",
+		q30_dupsRemoved = "Bam/{sample}_" + combinedGenome + "_trim_q30_dupsKept.bam"
     	output:
 	    	trim = "AlignmentStats/{sample}_" + combinedGenome + "_trim.tsv",
-		trim_q5 = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q5.tsv",
-		q5_dupsRemoved = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q5_dupsRemoved.tsv"
+		trim_q30 = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q30.tsv",
+		q30_dupsRemoved = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q30_dupsKept.tsv"
     	envmodules:
 	    	modules['samtoolsVer']
     	shell:
     		"""
 		samtools flagstat {input.trim} > {output.trim} &&
-		samtools flagstat {input.trim_q5} > {output.trim_q5} &&
-		samtools flagstat {input.q5_dupsRemoved} > {output.q5_dupsRemoved}
+		samtools flagstat {input.trim_q30} > {output.trim_q30} &&
+		samtools flagstat {input.q30_dupsRemoved} > {output.q30_dupsRemoved}
 		"""
 	# TODO: use newer samtools and use json output
-	#samtools flagstat -O json {input.q5_dupsRemoved} > {output.q5_dupsRemoved}
+	#samtools flagstat -O json {input.q30_dupsRemoved} > {output.q30_dupsRemoved}
 
 #rule makeFragmentSizePlots:
 #	input:
-#		bed = 'Bed/{sample}_{REFGENOME}_trim_q5_dupsRemoved_allFrags.bed'
+#		bed = 'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept_allFrags.bed'
 #	output:
-#		'Plots/FragDist/{sample}_{REFGENOME}_trim_q5_allFrags_cumulativeDistPlot.png'
+#		'Plots/FragDist/{sample}_{REFGENOME}_trim_q30_allFrags_cumulativeDistPlot.png'
 #	params:
 #		srcDirectory = srcDirectory
 #	envmodules:
