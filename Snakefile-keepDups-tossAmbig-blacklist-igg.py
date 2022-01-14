@@ -370,7 +370,7 @@ rule sortBam:
 		idx = 'Bam/{sample}_' + REFGENOME + '_trim_q30_dupsKept_sorted.bam.bai'
 	benchmark:
 		"benchmarks/{sample}.sortBam.benchmark.txt"
- 	envmodules:
+	envmodules:
 		modules['samtoolsVer']
 	threads: 4
 	shell:
