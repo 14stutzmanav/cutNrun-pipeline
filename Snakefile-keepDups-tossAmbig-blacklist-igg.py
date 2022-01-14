@@ -370,11 +370,7 @@ rule sortBam:
 		idx = 'Bam/{sample}_' + REFGENOME + '_trim_q30_dupsKept_sorted.bam.bai'
 	benchmark:
 		"benchmarks/{sample}.sortBam.benchmark.txt"
-<<<<<<< HEAD:Snakefile-keepDups-tossAmbig-blacklist-igg.py
- 	envmodules:
-=======
 	envmodules:
->>>>>>> 1bd58d285f4fb7882c5fa66728fe541bd7518194:Snakefile-keepDups-tossAmbig-blacklist-igg.py
 		modules['samtoolsVer']
 	threads: 4
 	shell:
