@@ -108,28 +108,28 @@ localrules: all, collect_genome_align_stats, splitFragments, makeFragmentBedGrap
 
 rule all:
 	input:
-        expand("Fastq/{sample}_R{num}_trim.fastq.gz", sample = sampleSheet.baseName, num = ['1','2']),
-        expand("Sam/{sample}_{species}_trim.sam", sample = sampleSheet.baseName, species = combinedGenome),
-        expand("Bam/{sample}_{species}_trim_q5_dupsKept.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = {"bam", "bam.bai"}),
-        expand("Bam/{sample}-pooled_{species}_trim_q5_dupsKept.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = {"bam", "bam.bai"}),
-        expand("Logs/{sample}_{species}_trim_q5_dupsKept_genomeStats.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-        expand("BigWig/{sample}_{species}_trim_q5_dupsKept_{fragType}{normType}.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList, ftype = {"bw", "bg"}),
-        expand("BigWig/{sample}-pooled_{species}_trim_q5_dupsKept_{fragType}{normType}.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList, ftype = {"bw", "bg"}),
-        expand("Peaks/{sample}_{species}_trim_q5_dupsKept_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes),
-        expand("Peaks/{sample}-pooled_{species}_trim_q5_dupsKept_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes),
-        expand('Threshold_PeakCalls/{sample}_{species}_trim_q5_dupsKept_{fragType}{normType}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList),
-        expand('Threshold_PeakCalls/{sample}-pooled_{species}_trim_q5_dupsKept_{fragType}{normType}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList),
-        expand('FastQC/{sample}_R1_fastqc.html', sample = sampleSheet.baseName),
-        expand('FastQC/{sample}_R1_trim_fastqc.html', sample = sampleSheet.baseName),
-        expand('FQscreen/{sample}_R1_trim_screen.txt', sample = sampleSheet.baseName),
-        expand('FQscreen/{sample}_R1_trim_screen.html', sample = sampleSheet.baseName),
-        "multiqc_report.html",
-        expand('Plots/FragDistInPeaks/{sample}_{REFGENOME}_trim_q5_allFrags_fragDistPlot.png', sample = sampleSheet.baseName, REFGENOME = REFGENOME),
-        expand('BigWig/{sample}_{REFGENOME}_trim_q5_dupsKept_{fragType}_rpgcNorm_zNorm.bw', sample = sampleSheet.baseName, REFGENOME = REFGENOME, fragType = fragTypes),
-        expand('BigWig/{sample}-pooled_{REFGENOME}_trim_q5_dupsKept_{fragType}_rpgcNorm_zNorm.bw', sample = sampleSheet.baseName, REFGENOME = REFGENOME, fragType = fragTypes),
-        expand("AlignmentStats/{sample}_{species}_trim.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-        expand("AlignmentStats/{sample}_{species}_trim_q5.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-        expand("AlignmentStats/{sample}_{species}_trim_q5_dupsKept.tsv", sample = sampleSheet.baseName, species = combinedGenome)
+		expand("Fastq/{sample}_R{num}_trim.fastq.gz", sample = sampleSheet.baseName, num = ['1','2']),
+		expand("Sam/{sample}_{species}_trim.sam", sample = sampleSheet.baseName, species = combinedGenome),
+		expand("Bam/{sample}_{species}_trim_q5_dupsKept.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = {"bam", "bam.bai"}),
+		expand("Bam/{sample}-pooled_{species}_trim_q5_dupsKept.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = {"bam", "bam.bai"}),
+		expand("Logs/{sample}_{species}_trim_q5_dupsKept_genomeStats.tsv", sample = sampleSheet.baseName, species = combinedGenome),
+		expand("BigWig/{sample}_{species}_trim_q5_dupsKept_{fragType}{normType}.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList, ftype = {"bw", "bg"}),
+		expand("BigWig/{sample}-pooled_{species}_trim_q5_dupsKept_{fragType}{normType}.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList, ftype = {"bw", "bg"}),
+		expand("Peaks/{sample}_{species}_trim_q5_dupsKept_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes),
+		expand("Peaks/{sample}-pooled_{species}_trim_q5_dupsKept_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes),
+		expand('Threshold_PeakCalls/{sample}_{species}_trim_q5_dupsKept_{fragType}{normType}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList),
+		expand('Threshold_PeakCalls/{sample}-pooled_{species}_trim_q5_dupsKept_{fragType}{normType}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList),
+		expand('FastQC/{sample}_R1_fastqc.html', sample = sampleSheet.baseName),
+		expand('FastQC/{sample}_R1_trim_fastqc.html', sample = sampleSheet.baseName),
+		expand('FQscreen/{sample}_R1_trim_screen.txt', sample = sampleSheet.baseName),
+		expand('FQscreen/{sample}_R1_trim_screen.html', sample = sampleSheet.baseName),
+		"multiqc_report.html",
+		expand('Plots/FragDistInPeaks/{sample}_{REFGENOME}_trim_q5_allFrags_fragDistPlot.png', sample = sampleSheet.baseName, REFGENOME = REFGENOME),
+		expand('BigWig/{sample}_{REFGENOME}_trim_q5_dupsKept_{fragType}_rpgcNorm_zNorm.bw', sample = sampleSheet.baseName, REFGENOME = REFGENOME, fragType = fragTypes),
+		expand('BigWig/{sample}-pooled_{REFGENOME}_trim_q5_dupsKept_{fragType}_rpgcNorm_zNorm.bw', sample = sampleSheet.baseName, REFGENOME = REFGENOME, fragType = fragTypes),
+		expand("AlignmentStats/{sample}_{species}_trim.tsv", sample = sampleSheet.baseName, species = combinedGenome),
+		expand("AlignmentStats/{sample}_{species}_trim_q5.tsv", sample = sampleSheet.baseName, species = combinedGenome),
+		expand("AlignmentStats/{sample}_{species}_trim_q5_dupsKept.tsv", sample = sampleSheet.baseName, species = combinedGenome)
 
 
 rule combine_technical_reps:
@@ -139,8 +139,8 @@ rule combine_technical_reps:
 	output:
 		r1 = 'Fastq/{sample}_R1.fastq.gz',
 		r2 = 'Fastq/{sample}_R2.fastq.gz'
-  benchmark:
-        "benchmarks/{sample}.combine_technical_reps.benchmark.txt"
+	benchmark:
+		"benchmarks/{sample}.combine_technical_reps.benchmark.txt"
 	shell:
 		"""
 		cat {input.r1} > {output.r1} &&
@@ -154,8 +154,8 @@ rule fastQC:
 		'FastQC/{sample}_R1_fastqc.html'
 	envmodules:
 		modules['fastqcVer']
-    benchmark:
-        "benchmarks/{sample}.fastQC.benchmark.txt"
+	benchmark:
+		"benchmarks/{sample}.fastQC.benchmark.txt"
 	shell:
 		"""
 		fastqc -o ./FastQC/ -f fastq {input}
@@ -171,9 +171,9 @@ rule trim_adapter:
 	log:
 		adapterStats = 'Logs/{sample}_adapterStats',
 		trimStats = 'Logs/{sample}_trimStats'
-    benchmark:
-        "benchmarks/{sample}.trim_adapter.benchmark.txt"
-    envmodules:
+	benchmark:
+		"benchmarks/{sample}.trim_adapter.benchmark.txt"
+	envmodules:
 		modules['bbmapVer']
 	shell:
 		"""
@@ -188,9 +188,9 @@ rule fastQC_trim:
 		'FastQC/{sample}_R1_trim_fastqc.html'
 	envmodules:
 		modules['fastqcVer']
-    benchmark:
-        "benchmarks/{sample}.fastQC_trim.benchmark.txt"
-    shell:
+	benchmark:
+		"benchmarks/{sample}.fastQC_trim.benchmark.txt"
+	shell:
 		"""
 		fastqc -o ./FastQC/ -f fastq {input}
 		"""
@@ -204,8 +204,8 @@ rule fastqScreen:
 	params:
 		fqscreenPath = modules['fqscreenPath'],
 		fqscreenConf = modules['fqscreenConf']
-    benchmark:
-        "benchmarks/{sample}.fastqScreen.benchmark.txt"
+	benchmark:
+		"benchmarks/{sample}.fastqScreen.benchmark.txt"
 	threads: 4
 	shell:
 		"""
@@ -223,32 +223,32 @@ def get_genome_fastas(config, speciesList):
 genome_fastas = get_genome_fastas(config, speciesList)
 
 rule bowtie2index:
-    	input:
-	    	genome_fastas.values(),
+	input:
+		genome_fastas.values(),
 	output:
-	    	"Bowtie2Index/" + combinedGenome +  ".fa",
-	    	expand("Bowtie2Index/{genome}.{num}.bt2", genome = combinedGenome, num = ["1", "2", "3", "4", "rev.1", "rev.2"])
+		"Bowtie2Index/" + combinedGenome +  ".fa",
+		expand("Bowtie2Index/{genome}.{num}.bt2", genome = combinedGenome, num = ["1", "2", "3", "4", "rev.1", "rev.2"])
 	params:
 		module = modules['bowtie2Ver'],
 		prefix = "Bowtie2Index/" + combinedGenome,
-	    	combined_fa = "Bowtie2Index/" + combinedGenome +  ".fa"
-    benchmark:
-        "benchmarks/bowtie2index.benchmark.txt"
-    run:
-	    init = True
-	    for genome, fasta in genome_fastas.items():
-		    if init:
-			    shell("sed -e 's/>/>{genome}_/' {fasta} > {fa}".format(genome = genome, fasta = fasta, fa = params.combined_fa))
-			    init = False
-		    else:
-			    shell("sed -e 's/>/>{genome}_/' {fasta} >> {fa}".format(genome = genome, fasta = fasta, fa = params.combined_fa))
-	    shell("module purge && module load {module} && bowtie2-build {fasta} {prefix}".format(module = params.module, fasta = params.combined_fa, prefix = params.prefix))
+		combined_fa = "Bowtie2Index/" + combinedGenome +  ".fa"
+	benchmark:
+		"benchmarks/bowtie2index.benchmark.txt"
+	run:
+		init = True
+		for genome, fasta in genome_fastas.items():
+			if init:
+				shell("sed -e 's/>/>{genome}_/' {fasta} > {fa}".format(genome = genome, fasta = fasta, fa = params.combined_fa))
+				init = False
+			else:
+				shell("sed -e 's/>/>{genome}_/' {fasta} >> {fa}".format(genome = genome, fasta = fasta, fa = params.combined_fa))
+		shell("module purge && module load {module} && bowtie2-build {fasta} {prefix}".format(module = params.module, fasta = params.combined_fa, prefix = params.prefix))
 
 
 
 rule align:
 	input:
-	    	expand("Bowtie2Index/{genome}.{num}.bt2", genome = combinedGenome, num = ["1", "2", "3", "4", "rev.1", "rev.2"]),
+		expand("Bowtie2Index/{genome}.{num}.bt2", genome = combinedGenome, num = ["1", "2", "3", "4", "rev.1", "rev.2"]),
 		r1 = "Fastq/{sample}_R1_trim.fastq.gz",
 		r2 = "Fastq/{sample}_R2_trim.fastq.gz"
 	output:
@@ -258,9 +258,9 @@ rule align:
 	params:
 		#refgenome = lambda wildcards: indexDict[wildcards.species],
 		refgenome = "Bowtie2Index/" + combinedGenome
-    benchmark:
-        "benchmarks/{sample}.align.benchmark.txt"
-    envmodules:
+	benchmark:
+		"benchmarks/{sample}.align.benchmark.txt"
+	envmodules:
 		modules['bowtie2Ver']
 	shell:
 		"""
@@ -274,9 +274,9 @@ rule convertToBam:
 		'Bam/{sample}_{species}_trim.bam'
 	envmodules:
 		modules['samtoolsVer']
-    benchmark:
-        "benchmarks/{sample}.convertToBam.benchmark.txt"
-    shell:
+	benchmark:
+		"benchmarks/{sample}.convertToBam.benchmark.txt"
+	shell:
 		"""
 		samtools view -b {input} > {output}
 		"""
@@ -287,8 +287,8 @@ rule qFilter:
 	output:
 		bam = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam',
 		index = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam'
-    benchmark:
-        "benchmarks/{sample}.qFilter.benchmark.txt"
+	benchmark:
+		"benchmarks/{sample}.qFilter.benchmark.txt"
 	envmodules:
 		modules['samtoolsVer']
 	shell:
@@ -298,18 +298,18 @@ rule qFilter:
 		"""
 
 rule pool_reps:
-    input:
-        expand("Bam/{sample}_" + combinedGenome + "_trim_q5_dupsKept.bam", sample = sampleSheet.baseName)
-    output:
-        bam = "Bam/{sample}-pooled_" + combinedGenome + "_trim_q5_dupsKept.bam",
-        index = "Bam/{sample}-pooled_" + combinedGenome + "_trim_q5_dupsKept.bam.bai"
-    benchmark:
-        "benchmarks/{sample}.pool_reps.benchmark.txt"
-    shell:
-        """
-        samtools merge {input} > {output.bam}
-        samtools index {output.bam} > {output.index}
-        """
+	input:
+		expand("Bam/{sample}_" + combinedGenome + "_trim_q5_dupsKept.bam", sample = sampleSheet.baseName)
+	output:
+		bam = "Bam/{sample}-pooled_" + combinedGenome + "_trim_q5_dupsKept.bam",
+		index = "Bam/{sample}-pooled_" + combinedGenome + "_trim_q5_dupsKept.bam.bai"
+	benchmark:
+		"benchmarks/{sample}.pool_reps.benchmark.txt"
+	shell:
+		"""
+		samtools merge {input} > {output.bam}
+		samtools index {output.bam} > {output.index}
+		"""
 
 rule collect_genome_align_stats:
 	input:
@@ -319,9 +319,9 @@ rule collect_genome_align_stats:
 		stats = 'Logs/{sample}_' + combinedGenome + '_trim_q30_dupsKept_genomeStats.tsv'
 	params:
 		mlr = modules['mlrPath']
-    benchmark:
-        "benchmarks/{sample}.collect_genome_align_stats.benchmark.txt"
-    envmodules:
+	benchmark:
+		"benchmarks/{sample}.collect_genome_align_stats.benchmark.txt"
+	envmodules:
 		modules['samtoolsVer']
 	shell:
 		"""
@@ -341,9 +341,9 @@ rule collect_genome_align_stats:
 
 
 rule splitSpecies:
-    	input:
-	    	bam = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam',
-	    	index = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam.bai',
+	input:
+		bam = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam',
+		index = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam.bai',
 	output:
 		bam = expand('Bam/{{sample}}_{species}_trim_q30_dupsKept.bam', species = speciesList),
 		index = expand('Bam/{{sample}}_{species}_trim_q30_dupsKept.bam.bai', species = speciesList)
@@ -351,8 +351,8 @@ rule splitSpecies:
 		#prefix = lambda wildcards : ["{}_".format(wildcards.species)]
 		prefix = ["{}_".format(species) for species in speciesList],
 		module = modules['samtoolsVer']
-    benchmark:
-        "benchmarks/{sample}.splitSpecies.benchmark.txt"
+	benchmark:
+		"benchmarks/{sample}.splitSpecies.benchmark.txt"
 	run:
 	    for prefix, output_bam in zip(params.prefix, output.bam):
 		    #print("prefix: {}, bam: {}".format(prefix, output_bam))
@@ -370,9 +370,9 @@ rule sortBam:
 	output:
 		bam = 'Bam/{sample}_' + REFGENOME + '_trim_q30_dupsKept_sorted.bam',
 		idx = 'Bam/{sample}_' + REFGENOME + '_trim_q30_dupsKept_sorted.bam.bai'
-    benchmark:
-        "benchmarks/{sample}.sortBam.benchmark.txt"
-    envmodules:
+	benchmark:
+		"benchmarks/{sample}.sortBam.benchmark.txt"
+ 	envmodules:
 		modules['samtoolsVer']
 	threads: 4
 	shell:
@@ -386,8 +386,8 @@ rule nameSortBam:
 		'Bam/{sample}_{species}_trim_q30_dupsKept_sorted.bam'
 	output:
 		'Bam/{sample}_{species}_trim_q30_dupsKept_nameSorted.bam'
-    benchmark:
-        "benchmarks/{sample}.nameSortBam.benchmark.txt"
+	benchmark:
+		"benchmarks/{sample}.nameSortBam.benchmark.txt"
 	envmodules:
 		modules['samtoolsVer']
 	shell:
@@ -398,12 +398,11 @@ rule nameSortBam:
 rule convertBamToBed:
 	input:
 		bam = 'Bam/{sample}_{species}_trim_q30_dupsKept_nameSorted.bam',
-		blacklist1 = blacklistPath,
-		blacklist2 = blacklist2Path
+		blacklist1 = blacklistPath
 	output:
 		'Bed/{sample}_{species}_trim_q30_dupsKept.bed'
-    benchmark:
-        "benchmarks/{sample}.convertBamToBed.benchmark.txt"
+	benchmark:
+		"benchmarks/{sample}.convertBamToBed.benchmark.txt"
 	envmodules:
 		modules['bedtoolsVer']
 	shell:
@@ -418,11 +417,11 @@ rule splitFragments:
 		allFrags = 'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept_allFrags.bed',
 		smallFrags = 'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept_20to120.bed',
 		bigFrags = 'Bed/{sample}_{REFGENOME}_trim_q30_dupsKept_150to700.bed'
-    benchmark:
-        "benchmarks/{sample}.splitFragments.benchmark.txt"
-    group:
-        "fragment"
-    shell:
+	benchmark:
+		"benchmarks/{sample}.splitFragments.benchmark.txt"
+	group:
+		"fragment"
+	shell:
 		"""
 		cut -f 1,2,6,7 {input} | awk -F '\t' '{{print $0, ($3-$2)}}' - > {output.allFrags}
 		awk -v OFS='\t' '($5>20) && ($5<120) {{print $0}}' {output.allFrags} > {output.smallFrags}
@@ -440,10 +439,10 @@ rule makeFragmentBedGraphs:
 		genomeSize = genomeSize,
 		chromSize_Path = chromSize_Path,
 		readLen = readLen
-    benchmark:
-        "benchmarks/{sample}.makeFragmentBedGraphs.benchmark.txt"
-    group:
-        "fragment"
+	benchmark:
+		"benchmarks/{sample}.makeFragmentBedGraphs.benchmark.txt"
+	group:
+		"fragment"
 	envmodules:
 		modules['bedtoolsVer']
 	shell:
@@ -466,10 +465,10 @@ rule makeSpikeNormFragmentBedGraphs:
 	params:
 		genomeSize = genomeSize,
 		chromSize_Path = chromSize_Path
-    benchmark:
-        "benchmarks/{sample}.makeSpikeNormFragmentBedGraphs.benchmark.txt"
-    group:
-        "fragment"
+	benchmark:
+		"benchmarks/{sample}.makeSpikeNormFragmentBedGraphs.benchmark.txt"
+	group:
+		"fragment"
 	envmodules:
 		modules['bedtoolsVer']
 	shell:
@@ -488,11 +487,11 @@ rule convertToBigWig:
 		'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}.bw'
 	params:
 		chromSize_Path = chromSize_Path
-    benchmark:
-        "benchmarks/{sample}.convertToBigWig.benchmark.txt"
-    group:
-        "bigwig"
-    envmodules:
+	benchmark:
+		"benchmarks/{sample}.convertToBigWig.benchmark.txt"
+	group:
+		"bigwig"
+	envmodules:
 		modules['ucscVer']
 	shell:
 		"""
@@ -505,11 +504,11 @@ rule zNormBigWig:
 	output:
 		zNorm = 'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}_rpgcNorm_zNorm.bw',
 		zStats = 'Logs/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}.zNorm'
-    benchmark:
-        "benchmarks/{sample}.zNormBigWig.benchmark.txt"
+	benchmark:
+		"benchmarks/{sample}.zNormBigWig.benchmark.txt"
 	group:
-        "bigwig"
-    envmodules:
+		"bigwig"
+	envmodules:
 		modules['rVer']
 	shell:
 		"""
@@ -521,10 +520,10 @@ rule callThresholdPeaks:
 		'BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}.bw'
 	output:
 		'Threshold_PeakCalls/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed'
-    benchmark:
-        "benchmarks/{sample}.callThresholdPeaks.benchmark.txt"
-    group:
-        "bigwig"
+	benchmark:
+		"benchmarks/{sample}.callThresholdPeaks.benchmark.txt"
+	group:
+		"bigwig"
 	envmodules:
 		modules['rVer']
 	shell:
@@ -540,8 +539,8 @@ rule callPeaks:
 	params:
 		control = controlDNAPath,
 		prefix = 'Peaks/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}'
-    benchmark:
-        "benchmarks/{sample}.callPeaks.benchmark.txt"
+	benchmark:
+		"benchmarks/{sample}.callPeaks.benchmark.txt"
 	envmodules:
 		modules['macsVer']
 	shell:
@@ -559,8 +558,8 @@ rule qcReport:
 		expand("AlignmentStats/{sample}_{species}_trim_q30_dupsKept.tsv", sample = sampleSheet.baseName, species = combinedGenome)
 	output:
 		"multiqc_report.html"
-    benchmark:
-        "benchmarks/qcReport.benchmark.txt"
+	benchmark:
+		"benchmarks/qcReport.benchmark.txt"
 	envmodules: modules['multiqcVer']
 	shell:
 		"""
@@ -573,9 +572,9 @@ rule makeFragmentSizePlots_inPeaks:
 		peaks = 'Peaks/{sample}_{REFGENOME}_trim_q30_dupsKept_allFrags_peaks.narrowPeak'
 	output:
 		'Plots/FragDistInPeaks/{sample}_{REFGENOME}_trim_q30_allFrags_fragDistPlot.png'
-    benchmark:
-        "benchmarks/{sample}.makeFragmentSizePlots_inPeaks.benchmark.txt"
-    envmodules:
+	benchmark:
+		"benchmarks/{sample}.makeFragmentSizePlots_inPeaks.benchmark.txt"
+	envmodules:
 		modules['rVer']
 	shell:
 		"""
@@ -583,20 +582,20 @@ rule makeFragmentSizePlots_inPeaks:
 		"""
 
 rule alignmentStats:
-    input:
-        trim = "Bam/{sample}_" + combinedGenome + "_trim.bam",
-        trim_q30 = "Bam/{sample}_" + combinedGenome + "_trim_q30.bam",
-        q30_dupsKept = "Bam/{sample}_" + combinedGenome + "_trim_q30_dupsKept.bam"
-    output:
-        trim = "AlignmentStats/{sample}_" + combinedGenome + "_trim.tsv",
-        trim_q30 = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q30.tsv",
-        q30_dupsKept = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q30_dupsKept.tsv"
-    benchmark:
-        "benchmarks/{sample}.makeFragmentSizePlots_inPeaks.benchmark.txt"
-    envmodules:
-        modules['samtoolsVer']
-    shell:
-        """
+	input:
+		trim = "Bam/{sample}_" + combinedGenome + "_trim.bam",
+		trim_q30 = "Bam/{sample}_" + combinedGenome + "_trim_q30.bam",
+		q30_dupsKept = "Bam/{sample}_" + combinedGenome + "_trim_q30_dupsKept.bam"
+	output:
+		trim = "AlignmentStats/{sample}_" + combinedGenome + "_trim.tsv",
+		trim_q30 = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q30.tsv",
+		q30_dupsKept = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q30_dupsKept.tsv"
+	benchmark:
+		"benchmarks/{sample}.makeFragmentSizePlots_inPeaks.benchmark.txt"
+	envmodules:
+		modules['samtoolsVer']
+	shell:
+		"""
 		samtools flagstat {input.trim} > {output.trim} &&
 		samtools flagstat {input.trim_q30} > {output.trim_q30} &&
 		samtools flagstat {input.q30_dupsKept} > {output.q30_dupsKept}
