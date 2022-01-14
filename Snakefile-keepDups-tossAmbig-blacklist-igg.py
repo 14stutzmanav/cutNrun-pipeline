@@ -17,8 +17,6 @@ genomeSize = config['genome'][REFGENOME]['genomeSize']
 readLen = config['readLen']
 
 blacklistPath = 'igg-overlap-keepDups.bed'
-blacklist2Path = 'hwt-k27me3-overlap.bed'
-blacklist2Path = 'k9r-k27me3-overlap.bed'
 
 modules = config['module']
 #########
@@ -407,7 +405,7 @@ rule convertBamToBed:
 		modules['bedtoolsVer']
 	shell:
 		"""
-		bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n | bedtools intersect -a stdin -b {input.blacklist1} -v | bedtools intersect -a stdin -b {input.blacklist2} -v > {output}
+		bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n | bedtools intersect -a stdin -b {input.blacklist1} -v > {output}
 		"""
 
 rule splitFragments:
