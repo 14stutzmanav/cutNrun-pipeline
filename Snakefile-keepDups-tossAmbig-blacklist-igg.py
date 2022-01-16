@@ -104,7 +104,7 @@ sampleSheet.to_csv('sampleSheet.tsv', sep = "\t", index = False)
 # TODO: remove
 #localrules: all, collect_genome_align_stats, splitFragments, makeFragmentBedGraphs, makeSpikeNormFragmentBedGraphs, convertToBigWig, zNormBigWig, callThresholdPeaks
 #localrules: all, collect_genome_alignment_stats
-localrules: all, covertToBigWig, zNormBigWig, allThresholdPeaks
+localrules: all, convertToBigWig, zNormBigWig, callThresholdPeaks
 
 rule all:
 	input:
