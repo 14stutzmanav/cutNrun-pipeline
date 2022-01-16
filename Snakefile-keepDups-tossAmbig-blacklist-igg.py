@@ -102,7 +102,9 @@ sampleSheet.to_csv('sampleSheet.tsv', sep = "\t", index = False)
 ####
 
 # TODO: remove
-localrules: all, collect_genome_align_stats, splitFragments, makeFragmentBedGraphs, makeSpikeNormFragmentBedGraphs, convertToBigWig, zNormBigWig, callThresholdPeaks
+#localrules: all, collect_genome_align_stats, splitFragments, makeFragmentBedGraphs, makeSpikeNormFragmentBedGraphs, convertToBigWig, zNormBigWig, callThresholdPeaks
+#localrules: all, collect_genome_alignment_stats
+localrules: all, covertToBigWig, zNormBigWig, allThresholdPeaks
 
 rule all:
 	input:
@@ -110,14 +112,14 @@ rule all:
 		expand("Sam/{sample}_{species}_trim.sam", sample = sampleSheet.baseName, species = combinedGenome),
 		expand("Bam/{sample}_{species}_trim.bam", sample = sampleSheet.baseName, species = combinedGenome),
 		expand("Bam/{sample}_{species}_trim_q30_dupsKept.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = {"bam", "bam.bai"}),
-		expand("Bam/{sample}-pooled_{species}_trim_q30_dupsKept.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = {"bam", "bam.bai"}),
+		#expand("Bam/{sample}-pooled_{species}_trim_q30_dupsKept.{ftype}", sample = sampleSheet.baseName, species = speciesList, ftype = {"bam", "bam.bai"}),
 		expand("Logs/{sample}_{species}_trim_q30_dupsKept_genomeStats.tsv", sample = sampleSheet.baseName, species = combinedGenome),
 		expand("BigWig/{sample}_{species}_trim_q30_dupsKept_{fragType}{normType}.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList, ftype = {"bw", "bg"}),
-		expand("BigWig/{sample}-pooled_{species}_trim_q30_dupsKept_{fragType}{normType}.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList, ftype = {"bw", "bg"}),
+		#expand("BigWig/{sample}-pooled_{species}_trim_q30_dupsKept_{fragType}{normType}.{ftype}", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList, ftype = {"bw", "bg"}),
 		expand("Peaks/{sample}_{species}_trim_q30_dupsKept_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes),
-		expand("Peaks/{sample}-pooled_{species}_trim_q30_dupsKept_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes),
+		#expand("Peaks/{sample}-pooled_{species}_trim_q30_dupsKept_{fragType}_peaks.narrowPeak", sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes),
 		expand('Threshold_PeakCalls/{sample}_{species}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList),
-		expand('Threshold_PeakCalls/{sample}-pooled_{species}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList),
+		#expand('Threshold_PeakCalls/{sample}-pooled_{species}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed', sample = sampleSheet.baseName, species = REFGENOME, fragType = fragTypes, normType = normTypeList),
 		expand('FastQC/{sample}_R1_fastqc.html', sample = sampleSheet.baseName),
 		expand('FastQC/{sample}_R1_trim_fastqc.html', sample = sampleSheet.baseName),
 		expand('FQscreen/{sample}_R1_trim_screen.txt', sample = sampleSheet.baseName),
@@ -125,9 +127,8 @@ rule all:
 		"multiqc_report.html",
 		expand('Plots/FragDistInPeaks/{sample}_{REFGENOME}_trim_q30_allFrags_fragDistPlot.png', sample = sampleSheet.baseName, REFGENOME = REFGENOME),
 		expand('BigWig/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}_rpgcNorm_zNorm.bw', sample = sampleSheet.baseName, REFGENOME = REFGENOME, fragType = fragTypes),
-		expand('BigWig/{sample}-pooled_{REFGENOME}_trim_q30_dupsKept_{fragType}_rpgcNorm_zNorm.bw', sample = sampleSheet.baseName, REFGENOME = REFGENOME, fragType = fragTypes),
+		#expand('BigWig/{sample}-pooled_{REFGENOME}_trim_q30_dupsKept_{fragType}_rpgcNorm_zNorm.bw', sample = sampleSheet.baseName, REFGENOME = REFGENOME, fragType = fragTypes),
 		expand("AlignmentStats/{sample}_{species}_trim.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-		expand("AlignmentStats/{sample}_{species}_trim_q30.tsv", sample = sampleSheet.baseName, species = combinedGenome),
 		expand("AlignmentStats/{sample}_{species}_trim_q30_dupsKept.tsv", sample = sampleSheet.baseName, species = combinedGenome)
 
 
@@ -288,8 +289,8 @@ rule qFilter:
 		index = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam.bai'
 	benchmark:
 		"benchmarks/{sample}.qFilter.benchmark.txt"
-	wildcard_constraints:
-		sample ="((?!-pooled).)*"
+	#wildcard_constraints:
+	#	sample ="((?!-pooled).)*"
 	envmodules:
 		modules['samtoolsVer']
 	shell:
@@ -298,19 +299,19 @@ rule qFilter:
 		samtools index {output.bam} {output.index}
 		"""
 
-rule pool_reps:
-	input:
-		expand("Bam/{sample}_" + combinedGenome + "_trim_q30_dupsKept.bam", sample = sampleSheet.baseName)
-	output:
-		bam = "Bam/{sample}-pooled_" + combinedGenome + "_trim_q30_dupsKept.bam",
-		index = "Bam/{sample}-pooled_" + combinedGenome + "_trim_q30_dupsKept.bam.bai"
-	benchmark:
-		"benchmarks/{sample}.pool_reps.benchmark.txt"
-	shell:
-		"""
-		samtools merge {input} > {output.bam}
-		samtools index {output.bam} > {output.index}
-		"""
+#rule pool_reps:
+#	input:
+#		expand("Bam/{sample}_" + combinedGenome + "_trim_q30_dupsKept.bam", sample = sampleSheet.baseName)
+#	output:
+#		bam = "Bam/{sample}-pooled_" + combinedGenome + "_trim_q30_dupsKept.bam",
+#		index = "Bam/{sample}-pooled_" + combinedGenome + "_trim_q30_dupsKept.bam.bai"
+#	benchmark:
+#		"benchmarks/{sample}.pool_reps.benchmark.txt"
+#	shell:
+#		"""
+#		samtools merge {input} > {output.bam}
+#		samtools index {output.bam} > {output.index}
+#		"""
 
 rule collect_genome_align_stats:
 	input:
@@ -490,8 +491,8 @@ rule convertToBigWig:
 		chromSize_Path = chromSize_Path
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}{normType}.convertToBigWig.benchmark.txt"
-	group:
-		"bigwig"
+#	group:
+#		"bigwig"
 	envmodules:
 		modules['ucscVer']
 	shell:
@@ -507,8 +508,8 @@ rule zNormBigWig:
 		zStats = 'Logs/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}.zNorm'
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}.zNormBigWig.benchmark.txt"
-	group:
-		"bigwig"
+#	group:
+#		"bigwig"
 	envmodules:
 		modules['rVer']
 	shell:
@@ -523,8 +524,8 @@ rule callThresholdPeaks:
 		'Threshold_PeakCalls/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed'
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}{normType}.callThresholdPeaks.benchmark.txt"
-	group:
-		"bigwig"
+#	group:
+#		"bigwig"
 	envmodules:
 		modules['rVer']
 	shell:
@@ -588,7 +589,6 @@ rule alignmentStats:
 		q30_dupsKept = "Bam/{sample}_" + combinedGenome + "_trim_q30_dupsKept.bam"
 	output:
 		trim = "AlignmentStats/{sample}_" + combinedGenome + "_trim.tsv",
-		trim_q30 = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q30.tsv",
 		q30_dupsKept = "AlignmentStats/{sample}_" + combinedGenome + "_trim_q30_dupsKept.tsv"
 	benchmark:
 		"benchmarks/{sample}.makeFragmentSizePlots_inPeaks.benchmark.txt"
