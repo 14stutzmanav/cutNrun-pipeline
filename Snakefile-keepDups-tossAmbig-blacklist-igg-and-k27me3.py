@@ -558,7 +558,6 @@ rule qcReport:
 		expand('FQscreen/{sample}_R1_trim_screen.txt', sample = sampleSheet.baseName),
 		expand('FastQC/{sample}_R1_trim_fastqc.html', sample = sampleSheet.baseName),
 		expand("AlignmentStats/{sample}_{species}_trim.tsv", sample = sampleSheet.baseName, species = combinedGenome),
-		expand("AlignmentStats/{sample}_{species}_trim_q30.tsv", sample = sampleSheet.baseName, species = combinedGenome),
 		expand("AlignmentStats/{sample}_{species}_trim_q30_dupsKept.tsv", sample = sampleSheet.baseName, species = combinedGenome)
 	output:
 		"multiqc_report.html"
