@@ -287,6 +287,7 @@ rule qFilter:
 	input:
 		'Bam/{sample}_' + combinedGenome + '_trim.bam'
 	output:
+		unsorted = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept_unsorted.bam',
 		bam = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam',
 		index = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam.bai'
 	benchmark:
@@ -297,7 +298,8 @@ rule qFilter:
 		modules['samtoolsVer']
 	shell:
 		"""
-		samtools view -@ 4 -bq 30 {input} > {output.bam} &&
+		samtools view -@ 4 -bq 30 {input} > {output.unsorted}
+		samtools sort -@ 4 -o {output.bam} {output.bam} &&
 		samtools index {output.bam} {output.index}
 		"""
 
