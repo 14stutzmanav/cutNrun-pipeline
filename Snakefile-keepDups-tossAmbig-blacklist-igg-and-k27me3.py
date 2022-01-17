@@ -299,7 +299,7 @@ rule qFilter:
 	shell:
 		"""
 		samtools view -@ 4 -bq 30 {input} > {output.unsorted}
-		samtools sort -@ 4 -o {output.bam} {output.bam} &&
+		samtools sort -@ 4 -o {output.bam} {output.unsorted} &&
 		samtools index {output.bam} {output.index}
 		"""
 
