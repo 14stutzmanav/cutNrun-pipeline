@@ -19,6 +19,7 @@ readLen = config['readLen']
 blacklistPath = 'igg-overlap-keepDups.bed'
 #blacklistPath2 = 'HWT-k27me3-pel-overlapping-peaks.bed'
 blacklistPath2 = 'K9R-k27me3-pel-overlapping-peaks.bed'
+blacklistPath2 = 'yw-k27me3-pel-overlapping-peaks.bed'
 
 modules = config['module']
 #########
