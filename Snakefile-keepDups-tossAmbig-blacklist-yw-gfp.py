@@ -16,10 +16,8 @@ chromSize_Path  = config['genome'][REFGENOME]['chrSize']
 genomeSize = config['genome'][REFGENOME]['genomeSize']
 readLen = config['readLen']
 
-blacklistPath = 'igg-overlap-keepDups.bed'
-#blacklistPath2 = 'HWT-k27me3-pel-overlapping-peaks.bed'
-blacklistPath2 = 'K9R-k27me3-pel-overlapping-peaks.bed'
-blacklistPath2 = 'yw-k27me3-pel-overlapping-peaks.bed'
+#blacklistPath = 'igg-overlap-keepDups.bed'
+blacklistPath2 = 'yw-gfp-pel-overlapping-peaks.bed'
 
 modules = config['module']
 #########
@@ -405,7 +403,7 @@ rule nameSortBam:
 rule convertBamToBed:
 	input:
 		bam = 'Bam/{sample}_{species}_trim_q30_dupsKept_nameSorted.bam',
-		blacklist1 = blacklistPath,
+		#blacklist1 = blacklistPath,
 		blacklist2 = blacklistPath2
 	output:
 		'Bed/{sample}_{species}_trim_q30_dupsKept.bed'
@@ -415,7 +413,8 @@ rule convertBamToBed:
 		modules['bedtoolsVer']
 	shell:
 		"""
-		bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n | bedtools intersect -a stdin -b {input.blacklist1} -v | bedtools intersect -a stdin -b {input.blacklist2} -v > {output}
+		bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n | bedtools intersect -a stdin -b {input.blacklist2} -v > {output}
+		#bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n | bedtools intersect -a stdin -b {input.blacklist1} -v | bedtools intersect -a stdin -b {input.blacklist2} -v > {output}
 		"""
 
 rule splitFragments:
