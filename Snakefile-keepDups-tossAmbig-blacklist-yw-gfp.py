@@ -104,8 +104,8 @@ sampleSheet.to_csv('sampleSheet.tsv', sep = "\t", index = False)
 
 # TODO: remove
 #localrules: all, collect_genome_align_stats, splitFragments, makeFragmentBedGraphs, makeSpikeNormFragmentBedGraphs, convertToBigWig, zNormBigWig, callThresholdPeaks
-#localrules: all, collect_genome_alignment_stats
-localrules: all, convertToBigWig, zNormBigWig, callThresholdPeaks
+localrules: all, collect_genome_alignment_stats
+#localrules: all, convertToBigWig, zNormBigWig, callThresholdPeaks
 
 rule all:
 	input:
@@ -414,7 +414,6 @@ rule convertBamToBed:
 	shell:
 		"""
 		bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n | bedtools intersect -a stdin -b {input.blacklist2} -v > {output}
-		#bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n | bedtools intersect -a stdin -b {input.blacklist1} -v | bedtools intersect -a stdin -b {input.blacklist2} -v > {output}
 		"""
 
 rule splitFragments:
@@ -496,8 +495,8 @@ rule convertToBigWig:
 		chromSize_Path = chromSize_Path
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}{normType}.convertToBigWig.benchmark.txt"
-#	group:
-#		"bigwig"
+	group:
+		"bigwig"
 	envmodules:
 		modules['ucscVer']
 	shell:
@@ -513,8 +512,8 @@ rule zNormBigWig:
 		zStats = 'Logs/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}.zNorm'
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}.zNormBigWig.benchmark.txt"
-#	group:
-#		"bigwig"
+	group:
+		"bigwig"
 	envmodules:
 		modules['rVer']
 	shell:
@@ -529,8 +528,8 @@ rule callThresholdPeaks:
 		'Threshold_PeakCalls/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed'
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}{normType}.callThresholdPeaks.benchmark.txt"
-#	group:
-#		"bigwig"
+	group:
+		"bigwig"
 	envmodules:
 		modules['rVer']
 	shell:
