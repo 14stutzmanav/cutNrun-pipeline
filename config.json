@@ -21,6 +21,13 @@
 			"controlDNAPath" : "/proj/mckaylab/genomeFiles/dm6/ControlGenomicDNA/ControlGenomicDNA_trim_q5_dupsRemoved.bed",
 			"genomeSize" : 137547960
 		},
+		"dmel-het" : {
+			"bowtie" : "/proj/dowenlab/users/astutzman/chang_larracuente_2019-assembly/assembly/Bowtie2Index/dmel_scaffold_V5",
+			"fasta" : "/proj/dowenlab/users/astutzman/chang_larracuente_2019-assembly/assembly/dmel_scaffold2_V5.fasta",
+			"chrSize" : "/proj/dowenlab/users/astutzman/chang_larracuente_2019-assembly/assembly/dmel_scaffold2_V5.chrom.sizes",
+			"controlDNAPath" : "",
+			"genomeSize" : 155613520
+		},
 		"ecoli" : { 
 			"bowtie" : "/proj/mckaylab/genomeFiles/Ecoli_K12_DH10B_ENSEMBL/Bowtie2Index/genome",
 			"fasta" : "/proj/mckaylab/genomeFiles/Ecoli_K12_DH10B_ENSEMBL/ecoli.fa"
