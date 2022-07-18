@@ -103,7 +103,7 @@ sampleSheet.to_csv('sampleSheet.tsv', sep = "\t", index = False)
 
 # TODO: remove
 #localrules: all, collect_genome_align_stats, splitFragments, makeFragmentBedGraphs, makeSpikeNormFragmentBedGraphs, convertToBigWig, zNormBigWig, callThresholdPeaks
-#localrules: all, collect_genome_alignment_stats
+#localrules: all, collect_genome_align_stats
 localrules: all, convertToBigWig, zNormBigWig, callThresholdPeaks
 
 rule all:
@@ -297,7 +297,7 @@ rule qFilter:
 	shell:
 		"""
 		samtools view -@ 4 -bq 30 {input} > {output.unsorted}
-		samtools sort {output.unsorted}} > {output.bam}
+		samtools sort {output.unsorted} > {output.bam}
 		samtools index {output.bam} {output.index}
 		"""
 
