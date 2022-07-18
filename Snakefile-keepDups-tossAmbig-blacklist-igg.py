@@ -285,6 +285,7 @@ rule qFilter:
 	input:
 		'Bam/{sample}_' + combinedGenome + '_trim.bam'
 	output:
+		unsorted = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept_unsorted.bam',
 		bam = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam',
 		index = 'Bam/{sample}_' + combinedGenome + '_trim_q30_dupsKept.bam.bai'
 	benchmark:
@@ -295,7 +296,8 @@ rule qFilter:
 		modules['samtoolsVer']
 	shell:
 		"""
-		samtools view -@ 4 -bq 30 {input} > {output.bam} &&
+		samtools view -@ 4 -bq 30 {input} > {output.unsorted}
+		samtools sort {output.unsorted}} > {output.bam}
 		samtools index {output.bam} {output.index}
 		"""
 
@@ -491,8 +493,8 @@ rule convertToBigWig:
 		chromSize_Path = chromSize_Path
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}{normType}.convertToBigWig.benchmark.txt"
-#	group:
-#		"bigwig"
+	group:
+		"bigwig"
 	envmodules:
 		modules['ucscVer']
 	shell:
@@ -508,8 +510,8 @@ rule zNormBigWig:
 		zStats = 'Logs/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}.zNorm'
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}.zNormBigWig.benchmark.txt"
-#	group:
-#		"bigwig"
+	group:
+		"bigwig"
 	envmodules:
 		modules['rVer']
 	shell:
@@ -524,8 +526,8 @@ rule callThresholdPeaks:
 		'Threshold_PeakCalls/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed'
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}{normType}.callThresholdPeaks.benchmark.txt"
-#	group:
-#		"bigwig"
+	group:
+		"bigwig"
 	envmodules:
 		modules['rVer']
 	shell:
