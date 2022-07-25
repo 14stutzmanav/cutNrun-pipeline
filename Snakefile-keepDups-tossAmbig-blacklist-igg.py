@@ -16,7 +16,8 @@ chromSize_Path  = config['genome'][REFGENOME]['chrSize']
 genomeSize = config['genome'][REFGENOME]['genomeSize']
 readLen = config['readLen']
 
-blacklistPath = 'igg-overlap-keepDups.bed'
+#blacklistPath = 'igg-overlap-keepDups.bed'
+blacklistPath = 'reproducible-igg-sup-peaks-sorted.narrowPeak'
 
 modules = config['module']
 #########
