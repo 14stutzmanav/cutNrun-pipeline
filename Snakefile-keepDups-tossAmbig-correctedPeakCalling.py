@@ -16,7 +16,7 @@ chromSize_Path  = config['genome'][REFGENOME]['chrSize']
 genomeSize = config['genome'][REFGENOME]['genomeSize']
 readLen = config['readLen']
 
-blacklistPath = 'igg-overlap-keepDups.bed'
+#blacklistPath = 'igg-overlap-keepDups.bed'
 
 modules = config['module']
 #########
@@ -401,8 +401,7 @@ rule nameSortBam:
 
 rule convertBamToBed:
 	input:
-		bam = 'Bam/{sample}_{species}_trim_q30_dupsKept_nameSorted.bam',
-		blacklist1 = blacklistPath
+		bam = 'Bam/{sample}_{species}_trim_q30_dupsKept_nameSorted.bam'
 	output:
 		'Bed/{sample}_{species}_trim_q30_dupsKept.bed'
 	benchmark:
@@ -411,7 +410,7 @@ rule convertBamToBed:
 		modules['bedtoolsVer']
 	shell:
 		"""
-		bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n | bedtools intersect -a stdin -b {input.blacklist1} -v > {output}
+		bedtools bamtobed -bedpe -i {input.bam} | sort -k 1,1 -k 2,2n  > {output}
 		"""
 
 rule splitFragments:
@@ -549,7 +548,7 @@ rule callPeaks:
 		modules['macsVer']
 	shell:
 		"""
-		macs2 callpeak -f BEDPE -c {params.control} -n {params.prefix} -g 121400000 -t {input}  --nomodel --seed 123 --keep-dup
+		macs2 callpeak -f BEDPE -c {params.control} -n {params.prefix} -g 121400000 -t {input} --nomodel --nolambda --seed 123 --keep-dup
 		"""
 
 rule qcReport:
