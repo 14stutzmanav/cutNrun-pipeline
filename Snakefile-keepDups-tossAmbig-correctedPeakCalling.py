@@ -548,7 +548,7 @@ rule callPeaks:
 		modules['macsVer']
 	shell:
 		"""
-		macs2 callpeak -f BEDPE -c {params.control} -n {params.prefix} -g 121400000 -t {input} --nomodel --nolambda --seed 123 --keep-dup
+		macs2 callpeak -f BEDPE -c {params.control} -n {params.prefix} -g 121400000 -t {input} --nomodel --nolambda --seed 123 --keep-dup all
 		"""
 
 rule qcReport:
