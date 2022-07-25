@@ -541,7 +541,6 @@ rule callPeaks:
 	output:
 		'Peaks/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}_peaks.narrowPeak'
 	params:
-		control = controlDNAPath,
 		prefix = 'Peaks/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}'
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}.callPeaks.benchmark.txt"
@@ -549,7 +548,7 @@ rule callPeaks:
 		modules['macsVer']
 	shell:
 		"""
-		macs2 callpeak -f BEDPE -c {params.control} -n {params.prefix} -g 121400000 -t {input} --nolambda --nomodel --seed 123 --keep-dup all
+		macs2 callpeak -f BEDPE -n {params.prefix} -g 121400000 -t {input} --nolambda --nomodel --seed 123 --keep-dup all
 		"""
 
 rule qcReport:
