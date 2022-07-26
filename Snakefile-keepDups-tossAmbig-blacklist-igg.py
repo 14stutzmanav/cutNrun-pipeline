@@ -494,8 +494,8 @@ rule convertToBigWig:
 		chromSize_Path = chromSize_Path
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}{normType}.convertToBigWig.benchmark.txt"
-	group:
-		"bigwig"
+#	group:
+#		"bigwig"
 	envmodules:
 		modules['ucscVer']
 	shell:
@@ -511,8 +511,8 @@ rule zNormBigWig:
 		zStats = 'Logs/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}.zNorm'
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}.zNormBigWig.benchmark.txt"
-	group:
-		"bigwig"
+#	group:
+#		"bigwig"
 	envmodules:
 		modules['rVer']
 	shell:
@@ -527,8 +527,8 @@ rule callThresholdPeaks:
 		'Threshold_PeakCalls/{sample}_{REFGENOME}_trim_q30_dupsKept_{fragType}{normType}_thresholdPeaks.bed'
 	benchmark:
 		"benchmarks/{sample}_{REFGENOME}_{fragType}{normType}.callThresholdPeaks.benchmark.txt"
-	group:
-		"bigwig"
+#	group:
+#		"bigwig"
 	envmodules:
 		modules['rVer']
 	shell:
