@@ -37,7 +37,7 @@
 	"module" : {
 		"bbmapVer" : "bbmap/38.71",
 		"bowtie2Ver" : "bowtie2/2.3.4.1",
-		"samtoolsVer" : "samtools/1.10",
+		"samtoolsVer" : "samtools/1.17",
 		"picardVerNum" : "2.2.4",
 		"picardVer" : "picard/2.2.4",
 		"picardPath" : "/nas/longleaf/apps/picard/2.2.4/picard-tools-2.2.4/picard.jar",
@@ -46,7 +46,7 @@
 		"macsVer" : "macs/2.1.2",
 		"rVer" : "r/4.1.3",
 		"fastqcVer" : "fastqc/0.11.7",
-		"multiqcVer" : "multiqc/1.7",
+		"multiqcVer" : "multiqc/1.11",
 		"deeptoolsVer" : "deeptools/2.4.1",
 		"pythonVer" : "python/3.5.1",
 		"fqscreenPath" : "/proj/mckaylab/genomeFiles/fastq_screen_v0.11.1/fastq_screen",
